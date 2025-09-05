@@ -43,15 +43,12 @@ class _CalculatorButtonState extends State<CalculatorButton>
   }
 
   void _handleTap() {
-    // Vibration tactile
     HapticFeedback.lightImpact();
 
-    // Animation de pression
     _animationController.forward().then((_) {
       _animationController.reverse();
     });
 
-    // Appel de la fonction
     widget.onPressed();
   }
 

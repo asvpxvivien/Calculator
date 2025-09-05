@@ -36,7 +36,6 @@ class DisplayScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.end,
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          // Calcul précédent
           if (previousText.isNotEmpty)
             AnimatedOpacity(
               duration: Duration(milliseconds: 200),
@@ -53,7 +52,6 @@ class DisplayScreen extends StatelessWidget {
 
           SizedBox(height: 8),
 
-          // Résultat principal
           AnimatedSwitcher(
             duration: Duration(milliseconds: 300),
             transitionBuilder: (child, animation) {
