@@ -1,0 +1,464 @@
+import 'package:flutter/material.dart';
+import 'dart:math' as math;
+import 'package:provider/provider.dart';
+import '../providers/theme_provider.dart';
+import '../providers/history_provider.dart';
+import '../widgets/display_screen.dart';
+import '../widgets/calculator_button.dart';
+import 'theme_settings_screen.dart';
+import 'history_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+class CalculatorScreen extends StatefulWidget {
+  @override
+  _CalculatorScreenState createState() => _CalculatorScreenState();
+}
+
+class _CalculatorScreenState extends State<CalculatorScreen> {
+  String displayText = '0';
+  String previousText = '';
+  String operation = '';
+  bool shouldResetDisplay = false;
+  final List<VoidCallback> _inputQueue = <VoidCallback>[];
+  bool _isProcessingQueue = false;
+  bool _justCalculated = false;
+  bool _isDegrees = true;
+  bool _isScientific = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _restorePrefs();
+  }
+
+  Future<void> _restorePrefs() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _isDegrees = prefs.getBool('calc_is_degrees') ?? true;
+      _isScientific = prefs.getBool('calc_is_scientific') ?? true;
+    });
+  }
+
+  Future<void> _savePrefs() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('calc_is_degrees', _isDegrees);
+    await prefs.setBool('calc_is_scientific', _isScientific);
+  }
+
+  void _enqueue(VoidCallback action) {
+    _inputQueue.add(action);
+    if (!_isProcessingQueue) {
+      _processQueue();
+    }
+  }
+
+  void _processQueue() async {
+    _isProcessingQueue = true;
+    while (_inputQueue.isNotEmpty) {
+      final next = _inputQueue.removeAt(0);
+      next();
+      // Micro délai pour laisser l'UI respirer et éviter les blocages
+      await Future<void>.delayed(const Duration(milliseconds: 8));
+      if (!mounted) break;
+    }
+    _isProcessingQueue = false;
+  }
+
+  void onNumberPressed(String number) {
+    _enqueue(() {
+      setState(() {
+        if (displayText == '0' || shouldResetDisplay || _justCalculated) {
+          displayText = number;
+          shouldResetDisplay = false;
+          _justCalculated = false;
+        } else {
+          displayText += number;
+        }
+      });
+    });
+  }
+
+  void onOperationPressed(String op) {
+    _enqueue(() {
+      setState(() {
+        if (operation.isNotEmpty) {
+          calculate();
+        }
+        previousText = displayText;
+        operation = op;
+        shouldResetDisplay = true;
+        _justCalculated = false;
+      });
+    });
+  }
+
+  void calculate() {
+    _enqueue(() {
+      if (previousText.isEmpty || operation.isEmpty) return;
+      double prev = double.tryParse(previousText) ?? 0;
+      double current = double.tryParse(displayText) ?? 0;
+      double result = 0;
+      switch (operation) {
+        case '+':
+          result = prev + current;
+          break;
+        case '-':
+          result = prev - current;
+          break;
+        case '×':
+          result = prev * current;
+          break;
+        case '÷':
+          result = current != 0 ? prev / current : 0;
+          break;
+      }
+      final resultText = result % 1 == 0 ? result.toInt().toString() : result.toString();
+      final expression = '${previousText.isEmpty ? displayText : previousText} ${operation.isEmpty ? '' : operation} ${operation.isEmpty ? '' : displayText}'.trim();
+      setState(() {
+        displayText = resultText;
+        previousText = '';
+        operation = '';
+        shouldResetDisplay = true;
+        _justCalculated = true;
+      });
+      // Enregistrer l'opération dans l'historique
+      context.read<HistoryProvider>().add(expression, resultText);
+    });
+  }
+
+  void toggleSign() {
+    _enqueue(() {
+      setState(() {
+        if (displayText.startsWith('-')) {
+          displayText = displayText.substring(1);
+        } else if (displayText != '0') {
+          displayText = '-$displayText';
+        } else {
+          displayText = '-0';
+        }
+      });
+    });
+  }
+
+  void applyPercent() {
+    _enqueue(() {
+      final value = double.tryParse(displayText);
+      if (value == null) return;
+      final result = value / 100.0;
+      final resultText = result % 1 == 0 ? result.toInt().toString() : result.toString();
+      setState(() {
+        displayText = resultText;
+        shouldResetDisplay = true;
+      });
+      context.read<HistoryProvider>().add('$value%','${resultText}');
+    });
+  }
+
+  void applySqrt() {
+    _enqueue(() {
+      final value = double.tryParse(displayText);
+      if (value == null || value < 0) return;
+      final result = math.sqrt(value);
+      final resultText = result % 1 == 0 ? result.toInt().toString() : result.toString();
+      setState(() {
+        displayText = resultText;
+        shouldResetDisplay = true;
+        _justCalculated = true;
+      });
+      context.read<HistoryProvider>().add('√(${value})', resultText);
+    });
+  }
+
+  void applySquare() {
+    _enqueue(() {
+      final value = double.tryParse(displayText);
+      if (value == null) return;
+      final result = value * value;
+      final resultText = result % 1 == 0 ? result.toInt().toString() : result.toString();
+      setState(() {
+        displayText = resultText;
+        shouldResetDisplay = true;
+        _justCalculated = true;
+      });
+      context.read<HistoryProvider>().add('(${value})²', resultText);
+    });
+  }
+
+  void applyReciprocal() {
+    _enqueue(() {
+      final value = double.tryParse(displayText);
+      if (value == null || value == 0) return;
+      final result = 1 / value;
+      final resultText = result % 1 == 0 ? result.toInt().toString() : result.toString();
+      setState(() {
+        displayText = resultText;
+        shouldResetDisplay = true;
+        _justCalculated = true;
+      });
+      context.read<HistoryProvider>().add('1/(${value})', resultText);
+    });
+  }
+
+  void _applyTrig(String fn) {
+    _enqueue(() {
+      final value = double.tryParse(displayText);
+      if (value == null) return;
+      double radians = _isDegrees ? (value * math.pi / 180.0) : value;
+      double result;
+      switch (fn) {
+        case 'sin':
+          result = math.sin(radians);
+          break;
+        case 'cos':
+          result = math.cos(radians);
+          break;
+        case 'tan':
+          result = math.tan(radians);
+          break;
+        default:
+          return;
+      }
+      final resultText = result.toString();
+      setState(() {
+        displayText = resultText;
+        shouldResetDisplay = true;
+        _justCalculated = true;
+      });
+      final mode = _isDegrees ? 'deg' : 'rad';
+      context.read<HistoryProvider>().add('$fn(${value} $mode)', resultText);
+    });
+  }
+
+  void insertConstant(String name) {
+    _enqueue(() {
+      final double value;
+      switch (name) {
+        case 'pi':
+          value = math.pi;
+          break;
+        case 'e':
+          value = math.e;
+          break;
+        default:
+          return;
+      }
+      final resultText = value.toString();
+      setState(() {
+        displayText = resultText;
+        shouldResetDisplay = true;
+        _justCalculated = true;
+      });
+      context.read<HistoryProvider>().add(name, resultText);
+    });
+  }
+
+  void toggleDegRad() {
+    setState(() {
+      _isDegrees = !_isDegrees;
+    });
+    _savePrefs();
+  }
+
+  void toggleScientificMode() {
+    setState(() {
+      _isScientific = !_isScientific;
+    });
+    _savePrefs();
+  }
+
+  void clear() {
+    _enqueue(() {
+      setState(() {
+        displayText = '0';
+        previousText = '';
+        operation = '';
+        shouldResetDisplay = false;
+      });
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Ma Calculatrice'),
+        actions: [
+          IconButton(
+            icon: Icon(_isScientific ? Icons.functions : Icons.calculate_outlined),
+            tooltip: _isScientific ? 'Mode normal' : 'Mode scientifique',
+            onPressed: toggleScientificMode,
+          ),
+          IconButton(
+            icon: Icon(Icons.palette),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ThemeSettingsScreen()),
+              );
+            },
+          ),
+          IconButton(
+            icon: Icon(Icons.history),
+            tooltip: 'Historique',
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => HistoryScreen()),
+              );
+            },
+          ),
+        ],
+      ),
+      body: _buildCalculatorContent(context),
+    );
+  }
+
+  Widget _buildCalculatorContent(BuildContext context) {
+    return Column(
+      children: [
+          // Écran d'affichage
+          Expanded(
+            flex: 1,
+            child: DisplayScreen(
+              text: displayText,
+              previousText: previousText,
+              operation: operation,
+            ),
+          ),
+          // Rangées scientifiques (compact: panneau repliable)
+          AnimatedContainer(
+            duration: Duration(milliseconds: 200),
+            height: _isScientific ? 140 : 0,
+            curve: Curves.easeInOut,
+            child: _isScientific
+                ? Column(
+                    children: [
+                      Expanded(
+                        child: Row(
+                          children: [
+                            CalculatorButton(text: _isDegrees ? 'DEG' : 'RAD', onPressed: toggleDegRad, isOperation: true),
+                            CalculatorButton(text: 'sin', onPressed: () => _applyTrig('sin')),
+                            CalculatorButton(text: 'cos', onPressed: () => _applyTrig('cos')),
+                            CalculatorButton(text: 'tan', onPressed: () => _applyTrig('tan')),
+                          ],
+                        ),
+                      ),
+                      Expanded(
+                        child: Row(
+                          children: [
+                            CalculatorButton(text: '1/x', onPressed: applyReciprocal),
+                            CalculatorButton(text: '√', onPressed: applySqrt),
+                            CalculatorButton(text: 'x²', onPressed: applySquare),
+                            CalculatorButton(text: 'π', onPressed: () => insertConstant('pi')),
+                          ],
+                        ),
+                      ),
+                    ],
+                  )
+                : SizedBox.shrink(),
+          ),
+          
+          // Boutons de la calculatrice
+          Expanded(
+            flex: 2,
+            child: Container(
+              padding: EdgeInsets.all(16),
+              child: Column(
+                children: [
+                  // Première ligne
+                  Expanded(
+                    child: Row(
+                      children: [
+                        CalculatorButton(
+                          text: 'C',
+                          onPressed: clear,
+                          isOperation: true,
+                        ),
+                        CalculatorButton(text: '±', onPressed: toggleSign),
+                        CalculatorButton(text: '%', onPressed: applyPercent),
+                        CalculatorButton(
+                          text: '÷',
+                          onPressed: () => onOperationPressed('÷'),
+                          isOperation: true,
+                        ),
+                      ],
+                    ),
+                  ),
+                  
+                  // Deuxième ligne
+                  Expanded(
+                    child: Row(
+                      children: [
+                        CalculatorButton(text: '7', onPressed: () => onNumberPressed('7')),
+                        CalculatorButton(text: '8', onPressed: () => onNumberPressed('8')),
+                        CalculatorButton(text: '9', onPressed: () => onNumberPressed('9')),
+                        CalculatorButton(
+                          text: '×',
+                          onPressed: () => onOperationPressed('×'),
+                          isOperation: true,
+                        ),
+                      ],
+                    ),
+                  ),
+                  
+                  // Troisième ligne
+                  Expanded(
+                    child: Row(
+                      children: [
+                        CalculatorButton(text: '4', onPressed: () => onNumberPressed('4')),
+                        CalculatorButton(text: '5', onPressed: () => onNumberPressed('5')),
+                        CalculatorButton(text: '6', onPressed: () => onNumberPressed('6')),
+                        CalculatorButton(
+                          text: '-',
+                          onPressed: () => onOperationPressed('-'),
+                          isOperation: true,
+                        ),
+                      ],
+                    ),
+                  ),
+                  
+                  // Quatrième ligne
+                  Expanded(
+                    child: Row(
+                      children: [
+                        CalculatorButton(text: '1', onPressed: () => onNumberPressed('1')),
+                        CalculatorButton(text: '2', onPressed: () => onNumberPressed('2')),
+                        CalculatorButton(text: '3', onPressed: () => onNumberPressed('3')),
+                        CalculatorButton(
+                          text: '+',
+                          onPressed: () => onOperationPressed('+'),
+                          isOperation: true,
+                        ),
+                      ],
+                    ),
+                  ),
+                  
+                  // Cinquième ligne
+                  Expanded(
+                    child: Row(
+                      children: [
+                        CalculatorButton(
+                          text: '0',
+                          onPressed: () => onNumberPressed('0'),
+                          flex: 2,
+                        ),
+                        CalculatorButton(
+                          text: '.',
+                          onPressed: () => onNumberPressed('.'),
+                        ),
+                        CalculatorButton(
+                          text: '=',
+                          onPressed: calculate,
+                          isOperation: true,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+      ],
+    );
+  }
+}
