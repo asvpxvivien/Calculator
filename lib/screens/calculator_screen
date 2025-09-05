@@ -121,7 +121,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
         shouldResetDisplay = true;
         _justCalculated = true;
       });
-      // Enregistrer l'opération dans l'historique
+      
       context.read<HistoryProvider>().add(expression, resultText);
     });
   }
@@ -316,7 +316,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
   Widget _buildCalculatorContent(BuildContext context) {
     return Column(
       children: [
-          // Écran d'affichage
+       
           Expanded(
             flex: 1,
             child: DisplayScreen(
@@ -325,7 +325,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
               operation: operation,
             ),
           ),
-          // Rangées scientifiques (compact: panneau repliable)
+       
           AnimatedContainer(
             duration: Duration(milliseconds: 200),
             height: _isScientific ? 140 : 0,
@@ -358,7 +358,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                 : SizedBox.shrink(),
           ),
           
-          // Boutons de la calculatrice
+    
           Expanded(
             flex: 2,
             child: Container(

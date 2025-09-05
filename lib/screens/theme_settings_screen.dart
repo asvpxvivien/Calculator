@@ -23,7 +23,6 @@ class ThemeSettingsScreen extends StatelessWidget {
               ),
               SizedBox(height: 20),
 
-              // Grid des thèmes
               GridView.builder(
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
@@ -59,7 +58,6 @@ class ThemeSettingsScreen extends StatelessWidget {
 
               SizedBox(height: 30),
 
-              // Section info
               Container(
                 padding: EdgeInsets.all(16),
                 decoration: BoxDecoration(
@@ -148,7 +146,6 @@ class ThemePreviewCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Nom du thème
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -171,7 +168,6 @@ class ThemePreviewCard extends StatelessWidget {
 
                 SizedBox(height: 16),
 
-                // Preview des couleurs
                 Expanded(
                   child: Container(
                     decoration: BoxDecoration(
@@ -184,7 +180,6 @@ class ThemePreviewCard extends StatelessWidget {
                     ),
                     child: Column(
                       children: [
-                        // Barre d'app preview
                         Container(
                           height: 40,
                           decoration: BoxDecoration(
@@ -207,7 +202,6 @@ class ThemePreviewCard extends StatelessWidget {
                           ),
                         ),
 
-                        // Boutons preview
                         Expanded(
                           child: Padding(
                             padding: EdgeInsets.all(8),

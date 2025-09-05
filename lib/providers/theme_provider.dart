@@ -15,7 +15,6 @@ class ThemeProvider extends ChangeNotifier {
     _loadTheme();
   }
 
-  // Charger le thème sauvegardé
   void _loadTheme() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? savedTheme = prefs.getString('selected_theme');
@@ -27,13 +26,11 @@ class ThemeProvider extends ChangeNotifier {
     }
   }
 
-  // Changer de thème
   void setTheme(String themeName) async {
     if (AppThemes.themes.containsKey(themeName)) {
       _currentThemeName = themeName;
       _currentTheme = AppThemes.themes[themeName]!;
 
-      // Sauvegarder le choix
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setString('selected_theme', themeName);
 
