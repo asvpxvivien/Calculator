@@ -11,57 +11,56 @@ A **modern and elegant calculator** built with Flutter, featuring advanced funct
 ##  Features
 
 ###  Basic Calculator
-- Arithmetic operations: `+`, `-`, `×`, `÷`
-- Negative numbers with `±`
-- Percentage calculation with `%`
-- Decimal number support
-- Clear button `C`
+ Arithmetic operations: `+`, `-`, `×`, `÷`
+ Negative numbers with `±`
+ Percentage calculation with `%`
+ Decimal number support
+ Clear button `C`
 
 ###  Scientific Mode
-- **Trigonometric functions**: `sin`, `cos`, `tan`
-- **Math functions**: `√` (square root), `x²` (square), `1/x` (inverse)
-- **Constants**: `π` (pi)
-- Degree/Radian toggle for trig functions
-- Compact mode with collapsible scientific panel
+ **Trigonometric functions**: `sin`, `cos`, `tan`
+ **Math functions**: `√` (square root), `x²` (square), `1/x` (inverse)
+ Degree/Radian toggle for trig functions
+ Compact mode with collapsible scientific panel
 
 ###  Customizable Themes
-- **Classic**: Clean & professional
-- **Dark**: Perfect for night use
-- **Neon**: Cyberpunk-inspired, colorful style
-- **Pastel**: Soft and calming
-- **Material 3**: Dynamic modern design
-- **Persistence**: Saves your preferred theme
+ **Classic**: Clean & professional
+ **Dark**: Perfect for night use
+ **Neon**: Cyberpunk-inspired, colorful style
+ **Pastel**: Soft and calming
+ **Material 3**: Dynamic modern design
+ **Persistence**: Saves your preferred theme
 
 ###  History
-- Automatic save of all calculations
-- Dedicated interface to browse history
-- History persistence across sessions
-- Clear option to delete history
+ Automatic save of all calculations
+ Dedicated interface to browse history
+ History persistence across sessions
+ Clear option to delete history
 
 ###  Performance & UX
-- Optimized for **fast and simultaneous inputs**
-- Smooth modern animations & transitions
-- Haptic feedback (vibrations)
-- Responsive UI for all screen sizes
+ Optimized for **fast and simultaneous inputs**
+ Smooth modern animations & transitions
+ Haptic feedback (vibrations)
+ Responsive UI for all screen sizes
 
 ---
 
 ##  Tech Stack
-- **Flutter** – Cross-platform framework
-- **Dart** – Programming language
-- **Provider** – State management
-- **SharedPreferences** – Data persistence
-- **Material 3** – Modern design system
+ **Flutter** – Cross-platform framework
+ **Dart** – Programming language
+ **Provider** – State management
+ **SharedPreferences** – Data persistence
+ **Material 3** – Modern design system
 
 ---
 
 ##  Getting Started
 
 ### Prerequisites
-- Flutter SDK (>= 3.8.1)
-- Dart SDK
-- Android Studio / VS Code
-- Emulator or physical device
+ Flutter SDK (>= 3.8.1)
+ Dart SDK
+ Android Studio / VS Code
+ Emulator or physical device
 
 ### Installation
 ```bash
