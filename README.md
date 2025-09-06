@@ -3,7 +3,7 @@
 Une calculatrice moderne et élégante développée avec Flutter, offrant des fonctionnalités avancées et une interface utilisateur intuitive.
 
 <p align="center">
-<img src="assets/images/calculator.gif" width="300" alt="calculator App Demo">
+<img src="assets/images/calculator.gif" width="350" alt="calculator App Demo">
 </p>
 
 
@@ -16,14 +16,14 @@ Une calculatrice moderne et élégante développée avec Flutter, offrant des fo
 - Gestion des nombres décimaux
 - Bouton d'effacement `C`
 
-### 🔬 **Mode Scientifique**
+###  **Mode Scientifique**
  **Fonctions trigonométriques** : `sin`, `cos`, `tan`
  **Fonctions mathématiques** : `√` (racine carrée), `x²` (carré), `1/x` (inverse)
  **Constantes** : `π` (pi)
  **Basculement Degrés/Radians** pour les fonctions trigonométriques
  **Mode compact** : Panneau scientifique repliable
 
-### 🎨 **Thèmes Personnalisables**
+###  **Thèmes Personnalisables**
  **4 thèmes disponibles** :
     **Classique** : Design épuré et professionnel
     **Sombre** : Interface sombre pour un usage nocturne
@@ -63,7 +63,7 @@ Une calculatrice moderne et élégante développée avec Flutter, offrant des fo
 ### Installation
 ```bash
 # Cloner le projet
-git clone <url-du-repo>
+git clone https://github.com/asvpxvivien/Calculator.git
 cd calculatrice
 
 # Installer les dépendances
