@@ -1,73 +1,82 @@
-#  Calculatrice Flutter
+# 📱 Flutter Calculator
 
-Une calculatrice moderne et élégante développée avec Flutter, offrant des fonctionnalités avancées et une interface utilisateur intuitive.
+A **modern and elegant calculator** built with Flutter, featuring advanced functions, customizable themes, and a smooth user experience.
 
 <p align="center">
-<img src="assets/images/calculator.gif" width="250" alt="calculator App Demo">
+  <img src="assets/images/calculator.gif" width="250" alt="Calculator App Demo">
 </p>
 
+---
 
-##  Fonctionnalités
+##  Features
 
-###  **Calculatrice de Base**
-- Opérations arithmétiques : `+`, `-`, `×`, `÷`
-- Support des nombres négatifs avec le bouton `±`
-- Calcul de pourcentages avec `%`
-- Gestion des nombres décimaux
-- Bouton d'effacement `C`
+###  Basic Calculator
+- Arithmetic operations: `+`, `-`, `×`, `÷`
+- Negative numbers with `±`
+- Percentage calculation with `%`
+- Decimal number support
+- Clear button `C`
 
-###  **Mode Scientifique**
- **Fonctions trigonométriques** : `sin`, `cos`, `tan`
- **Fonctions mathématiques** : `√` (racine carrée), `x²` (carré), `1/x` (inverse)
- **Constantes** : `π` (pi)
- **Basculement Degrés/Radians** pour les fonctions trigonométriques
- **Mode compact** : Panneau scientifique repliable
+###  Scientific Mode
+- **Trigonometric functions**: `sin`, `cos`, `tan`
+- **Math functions**: `√` (square root), `x²` (square), `1/x` (inverse)
+- **Constants**: `π` (pi)
+- Degree/Radian toggle for trig functions
+- Compact mode with collapsible scientific panel
 
-###  **Thèmes Personnalisables**
- **4 thèmes disponibles** :
-    **Classique** : Design épuré et professionnel
-    **Sombre** : Interface sombre pour un usage nocturne
-    **Néon** : Style cyberpunk avec accents colorés
-    **Pastel** : Couleurs douces et apaisantes
-    **Material 3** : Design moderne avec ColorScheme dynamique
-    **Persistance** : Sauvegarde automatique du thème choisi
+###  Customizable Themes
+- **Classic**: Clean & professional
+- **Dark**: Perfect for night use
+- **Neon**: Cyberpunk-inspired, colorful style
+- **Pastel**: Soft and calming
+- **Material 3**: Dynamic modern design
+- **Persistence**: Saves your preferred theme
 
-###  **Historique des Calculs**
- **Enregistrement automatique** de tous les calculs effectués
- **Interface dédiée** pour consulter l'historique
- **Persistance** : L'historique est sauvegardé entre les sessions
- **Suppression** : Possibilité de vider l'historique
+###  History
+- Automatic save of all calculations
+- Dedicated interface to browse history
+- History persistence across sessions
+- Clear option to delete history
 
-###  **Performance & UX**
- **Fluidité optimisée** : Gestion des appuis rapides et simultanés
- **Animations fluides** : Transitions et effets visuels modernes
- **Feedback haptique** : Vibrations tactiles lors des appuis
- **Responsive** : Interface adaptée à toutes les tailles d'écran
+###  Performance & UX
+- Optimized for **fast and simultaneous inputs**
+- Smooth modern animations & transitions
+- Haptic feedback (vibrations)
+- Responsive UI for all screen sizes
 
-##  Technologies Utilisées
+---
 
- **Flutter** : Framework de développement cross-platform
- **Dart** : Langage de programmation
- **Provider** : Gestion d'état
- **SharedPreferences** : Persistance des données
- **Material 3** : Design system moderne
+##  Tech Stack
+- **Flutter** – Cross-platform framework
+- **Dart** – Programming language
+- **Provider** – State management
+- **SharedPreferences** – Data persistence
+- **Material 3** – Modern design system
 
-##  Installation & Lancement
+---
 
-### Prérequis
-- Flutter SDK (version 3.8.1 ou supérieure)
+##  Getting Started
+
+### Prerequisites
+- Flutter SDK (>= 3.8.1)
 - Dart SDK
 - Android Studio / VS Code
-- Émulateur ou appareil physique
+- Emulator or physical device
 
 ### Installation
 ```bash
-# Cloner le projet
+# Clone the project
 git clone https://github.com/asvpxvivien/Calculator.git
 
-# Installer les dépendances
+# Go to the project folder
+cd Calculator
+
+# Install dependencies
 flutter pub get
 
-# Lancer l'application
+# Run the application
 flutter run
 ```
+---
+
+
