@@ -3,7 +3,7 @@
 Une calculatrice moderne et élégante développée avec Flutter, offrant des fonctionnalités avancées et une interface utilisateur intuitive.
 
 <p align="center">
-<img src="assets/images/calculator.gif" width="350" alt="calculator App Demo">
+<img src="assets/images/calculator.gif" width="250" alt="calculator App Demo">
 </p>
 
 
@@ -64,7 +64,6 @@ Une calculatrice moderne et élégante développée avec Flutter, offrant des fo
 ```bash
 # Cloner le projet
 git clone https://github.com/asvpxvivien/Calculator.git
-cd calculatrice
 
 # Installer les dépendances
 flutter pub get
