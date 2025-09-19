@@ -1,4 +1,4 @@
-# 📱 Flutter Calculator
+#  Flutter Calculator
 
 A **modern and elegant calculator** built with Flutter, featuring advanced functions, customizable themes, and a smooth user experience.
 
